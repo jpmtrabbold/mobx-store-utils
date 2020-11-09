@@ -31,7 +31,7 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "postbuild": "npm run copy-publish-files",
+    "postbuild": "yarn run copy-publish-files",
     "copy-publish-files": "cp package.json ./dist/ & cp README.md ./dist/ & cp LICENSE ./dist/",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
