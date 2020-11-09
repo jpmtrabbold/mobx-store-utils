@@ -1,6 +1,9 @@
 import { makeAutoObservable } from 'mobx'
+import { observer } from 'mobx-react-lite'
+import React from 'react'
 import { OnValueChangeType, fieldValueProps, InputPropsVariant, InputPropsConfig, OnValueChangedType } from "./field-props"
 import FormErrorHandler, { FormError } from './FormErrorHandler'
+import FormInputWrapper from './FormInputWrapper'
 
 export type StandardErrorProps = { error: boolean, helperText: string }
 
@@ -82,7 +85,7 @@ export default class FormInputHandler<T extends Object, P extends Extract<keyof 
 
     props: FormInputHandlerProps<T, P, A, E>
 
-    errorPropsAdapter = (params: ErrorPropsAdapterParams<T, P>) => {
+    private errorPropsAdapter = (params: ErrorPropsAdapterParams<T, P>) => {
         const { errorHandler } = params
         if (!errorHandler) {
             return {}
@@ -92,7 +95,7 @@ export default class FormInputHandler<T extends Object, P extends Extract<keyof 
             return { error: true, helperText: errorHandler.getFieldError(params.propertyName, params.errors) }
         }
 
-        return {}
+        return { error: false, helperText: undefined }
     }
 
     /** call this computed property to get the props for your error component */
@@ -122,7 +125,7 @@ export default class FormInputHandler<T extends Object, P extends Extract<keyof 
     /** call this computed property to get the props for your checkbox component */
     get checkboxProps() {
         const value = this.props.store[this.props.propertyName]
-        return this.getInputProps({
+        return this.getCheckboxProps({
             value,
             store: this.props.store,
             propertyName: this.props.propertyName,
@@ -134,7 +137,15 @@ export default class FormInputHandler<T extends Object, P extends Extract<keyof 
         })
     }
 
-    getInputProps(params: GetInputPropsParams<T, P, A, E>) {
+    get InputWrapper() {
+        return observer((props: { children: React.ReactElement }) => <FormInputWrapper handler={this} children={props.children} isCheckbox={false} />)
+    }
+
+    get CheckboxWrapper() {
+        return observer((props: { children: React.ReactElement }) => <FormInputWrapper handler={this} children={props.children} isCheckbox={true} />)
+    }
+
+    private getInputProps(params: GetInputPropsParams<T, P, A, E>) {
         const isCheckbox = false
         const newFieldProps = fieldValueProps(
             params.store,
@@ -154,7 +165,7 @@ export default class FormInputHandler<T extends Object, P extends Extract<keyof 
 
     }
 
-    getCheckboxProps(params: GetInputPropsParams<T, P, A, E>) {
+    private getCheckboxProps(params: GetInputPropsParams<T, P, A, E>) {
         const isCheckbox = true
         const newFieldProps = fieldValueProps(
             params.store,

@@ -1,4 +1,4 @@
-import { isObservableProp } from "mobx"
+import { action, isObservableProp } from "mobx"
 
 export interface IUpdatable { value?: any, updated: boolean }
 export type OnValueChangeType<A extends Object> = (newValue: any, additionalData?: A) => Promise<boolean | undefined | void>
@@ -72,7 +72,7 @@ export function fieldValueProps<T extends Object, P extends Extract<keyof T, str
         }
     }
 
-    const setVal = (value: any) => {
+    const setVal = action((value: any) => {
         const property = store[propertyName]
         if (isUpdatable(property)) {
             property.value = value
@@ -82,15 +82,15 @@ export function fieldValueProps<T extends Object, P extends Extract<keyof T, str
         } else {
             store[propertyName] = value
         }
-    }
-    const setValue = (value: any) => {
+    })
+    const setValue = action((value: any) => {
         const old = getVal()
         setVal(value)
 
         if (onValueChanged) {
             onValueChanged(old, value, paramsToValueChange)
         }
-    }
+    })
 
     if (isUpdatable(store[propertyName])) {
         if (!isObservableProp(store[propertyName], 'value')) {

@@ -32,7 +32,7 @@ export class FormErrorHandler<T extends any> {
     /** gets the error for any specific field */
     getFieldError(field: FieldType<T>, errors?: FormError<T>[]) {
         const e = errors ?? this.errors
-        return findLast(this.errors, (item => item.field === field))
+        return findLast(e, (item => item.field === field))?.error
     }
 
     /** reset error for specific field */
