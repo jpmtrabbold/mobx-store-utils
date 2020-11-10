@@ -1,6 +1,6 @@
 {
   "name": "mobx-store-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "João Pedro Macimiano Trabbold",
   "module": "dist/mobx-store-utils.esm.js",
   "description": "A series of MobX utils, but most importantly, the useStore hook - a one-stop hook for all your store instantiations",

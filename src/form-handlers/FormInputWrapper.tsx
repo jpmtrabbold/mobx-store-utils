@@ -15,6 +15,5 @@ export default function FormInputWrapper<T extends Object, P extends Extract<key
     
     const allProps = { ...newProps, ...errorProps }
     const deps = Object.entries(allProps).map(d => d[1])
-    debugger
     return useMemo(() => React.cloneElement(props.children, allProps), deps)
 }
